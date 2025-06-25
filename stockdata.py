@@ -3,8 +3,8 @@ import pandas as pd
 import time
 
 def telegrambot(note):
-       bot_token="8151142897:AAGoXgaHGKXZ4gKp2emt2KJ_Kx6dTBs5SJs"
-       chat_id="6700567738"
+       bot_token="**"
+       chat_id="***"
        url=f"https://api.telegram.org/bot{ bot_token}/sendMessage"
        data={"chat_id":chat_id, "text": note }
       
@@ -13,9 +13,9 @@ def telegrambot(note):
        
 
 
-api_key="cp7rd3pr01qi8q89arpgcp7rd3pr01qi8q89arq0"
+api_key="***"
 
-stocks=["AAPL", "MSFT", "GOOGL","TSLA","TSM","AMZN","PM"]
+stocks=["AAPL", "MSFT", "GOOGL","TSLA","TSM","AMZN","PM","META","NFLX","BABA","BAC","JNJ","WMT","BTI"]
 #alarm target
 alarm={
     "AAPL":201.56,
@@ -26,6 +26,7 @@ alarm={
 
 while True:
    note=""
+   clm=[]
 
    for stock  in stocks:
        url=f"https://finnhub.io/api/v1/quote?symbol={stock}&token={api_key}"
@@ -35,6 +36,7 @@ while True:
             price=get['c'] #current prices
             print(f"{stock}: ${price:.2f}")
             note += f"{stock}: ${price:.2f} \n"
+            clm.append({"Name":stock , "Price":price})
 
             if stock in alarm:
               if price >= alarm[stock]:
@@ -50,7 +52,9 @@ while True:
        else:
          print(f": tekar deneyiniz ")
          note +=" tekar deneyiniz \n "
-
-       
+    #exel bölümü
+  
+   ecl=pd.DataFrame(clm )
+   ecl.to_excel("abd_hisse.xlsx", index=True)
    telegrambot(note)
    time.sleep(10)
