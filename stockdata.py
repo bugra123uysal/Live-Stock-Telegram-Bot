@@ -7,24 +7,36 @@ from telegram.ext import Updater, CommandHandler
 
 
 def telegrambot(note):
-       bot_token="**"
-       chat_id="****"
+       bot_token="****"
+       chat_id="**"
        url=f"https://api.telegram.org/bot{bot_token}/sendMessage"
        data={"chat_id":chat_id, "text": note }
        requests.post(url, data=data)
        
 
 
-api_key="****"
+
+api_key="**"
 
 stocks=["AAPL", "MSFT", "GOOGL","TSLA","TSM","AMZN","PM","META","NFLX","BABA","BAC","JNJ","WMT","BTI"]
 #alarm target
-alarm={
-    "AAPL":201.56,
-    "MSFT":492.27,
-    "GOOGL":170.68
+alarm={}
 
-}
+
+def alarmm(update , context):
+    try:
+        hisse=context.args[0].upper()
+        fiyatı=float(context.args[1])
+        alarm[hisse]=fiyatı
+       
+        alert=f"{hisse}  hedef fiyatı {fiyatı} "
+        update.message.reply_text(alert)
+
+    except:
+        alert="tekrar deneyiniz "
+        update.message.reply_text(alert)
+       
+
 
 def helpp(update , context):
         try:
@@ -32,7 +44,7 @@ def helpp(update , context):
           
           if helpp:  
 
-           yardım=("- for helping  : / help   - for  prices  /fiyatt TSM  ")    
+           yardım=("- for helping  : / help   - for  prices  /fiyatt TSM  - for alarming /alarmm META 710 ")    
            update.message.reply_text(yardım)
           else:
               update.message.reply_text
@@ -75,7 +87,7 @@ while True:
           
             print(f"{stock}: ${price:.2f}")
             note += f"{stock}: ${price:.2f}\n"
-            clm.append({"Name":stock , "Price": price})
+            clm.append({"Name":stock , "Price": price, "Alarm": alarm})
         
 
            
@@ -97,8 +109,9 @@ while True:
          print(f": tekar deneyiniz ")
          note +=" tekar deneyiniz \n "
    #exel bölümü
-   ecl=pd.DataFrame(clm)
-   ecl.to_excel("abd_hisse.xlsx", index=True )  
+   ecl=pd.DataFrame[clm,  ]
+   ecl.to_excel("abd_hisse.xlsx", index=True ) 
+   
    telegrambot(note)
    if __name__ == "__main__":
        bot_token="8151142897:AAGoXgaHGKXZ4gKp2emt2KJ_Kx6dTBs5SJs"
@@ -106,11 +119,15 @@ while True:
        updater=Updater(bot_token, use_context=True)
        ater=Updater(bot_token, use_context=True)
        dp=updater.dispatcher 
+        #bilgilendirme
        aa=updater.dispatcher
        # hisse fiyatı komitti
        dp.add_handler(CommandHandler("fiyatt", fiyatt))
        #bilgilendirme
        aa.add_handler(CommandHandler ("helpp", helpp ))
+
+       #alarm fiyat belirleme
+       dp.add_handler(CommandHandler("alarmm", alarmm ))
 
        updater.start_polling()
        ater.idle()
