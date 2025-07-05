@@ -7,34 +7,46 @@ from telegram.ext import Updater, CommandHandler
 
 
 def telegrambot(note):
-       bot_token="****"
-       chat_id="**"
+       bot_token="8151142897:AAGoXgaHGKXZ4gKp2emt2KJ_Kx6dTBs5SJs"
+       chat_id="6700567738"
        url=f"https://api.telegram.org/bot{bot_token}/sendMessage"
        data={"chat_id":chat_id, "text": note }
-       requests.post(url, data=data)
-       
+       requests.post(url,data=data)
+       alget=requests.get(url).json()
+     
 
 
 
-api_key="**"
+
+
+
+api_key="cp7rd3pr01qi8q89arpgcp7rd3pr01qi8q89arq0"
 
 stocks=["AAPL", "MSFT", "GOOGL","TSLA","TSM","AMZN","PM","META","NFLX","BABA","BAC","JNJ","WMT","BTI"]
 #alarm target
-alarm={}
 
 
-def alarmm(update , context):
+def analiz(update , context):
     try:
+          
         hisse=context.args[0].upper()
-        fiyatı=float(context.args[1])
-        alarm[hisse]=fiyatı
-       
-        alert=f"{hisse}  hedef fiyatı {fiyatı} "
-        update.message.reply_text(alert)
-
-    except:
-        alert="tekrar deneyiniz "
-        update.message.reply_text(alert)
+        url=f"https://finnhub.io/api/v1/quote?symbol={hisse}&token={api_key}"
+        alget=requests.get(url).json()
+        current=alget['c']
+        higt=alget['h']
+        low=alget['l']
+        prev=alget['pc']
+        change_pct=round(((current - prev)/ prev)* 100, 2) 
+      
+            
+        note=update.message.reply_text(f"📊 {hisse} Analizi \n" f" 💰 Anlık Fiyat: ${current:.2f}\n" f"📈 Değişim: %{change_pct}\n" f"🔺 En Yüksek: ${higt:.2f}\n" f"🔻 En Düşük: ${low:.2f}\n" f"📈 bir gün önce: %{change_pct:.2f}")
+        update.message.reply_text(note)
+           
+      
+        note +="tekrar deneyiniz"
+        update.message.reply_text(note)               
+    except Exception as e:
+       update.message.reply_text(f" hata oluştu: {e}")
        
 
 
@@ -44,7 +56,7 @@ def helpp(update , context):
           
           if helpp:  
 
-           yardım=("- for helping  : / help   - for  prices  /fiyatt TSM  - for alarming /alarmm META 710 ")    
+           yardım=("- for helping  : / help   - for  prices  /fiyatt TSM  - for analiz /analiz META ")    
            update.message.reply_text(yardım)
           else:
               update.message.reply_text
@@ -59,7 +71,7 @@ def fiyatt(update, context):
           url=f"https://finnhub.io/api/v1/quote?symbol={hisse}&token={api_key}"
           rege=requests.get(url).json()
           fiyatt=rege.get("c")
-          
+   
    
           if fiyatt:
               note=f"{hisse}: ${fiyatt:.2f}"
@@ -72,45 +84,48 @@ def fiyatt(update, context):
            update.message.reply_text("kullanım /fiyatt")
 
 
-while True:
+def get_stock_data():
+   
 
    note=""
    clm=[]
-
+  
+   
    for stock  in stocks:
        url=f"https://finnhub.io/api/v1/quote?symbol={stock}&token={api_key}"
        get=requests.get(url).json()
-       price=get['c'] #current prices
+       price=get.get('c', None) #current prices
+       try:
+             alget=requests.get(url).json()
+             current=alget['c'],
+             higt=alget['h'],
+             low=alget['l'],
+             prev=alget['pc'],
+             change_pct=round(((current - prev)/ prev)* 100, 2)
+           
+
+             clm.append({"Name":stock , "Price": price,  " current": current ,"higt":higt ,"low":low," prev": prev," change_pct": change_pct   }) 
        
-       if 'c' in get:
+       
+             note += "tekrar deneyelim"
+       except Exception as e:
+            note +="veri alınamadı"
+       
+       if price:
             
           
             print(f"{stock}: ${price:.2f}")
             note += f"{stock}: ${price:.2f}\n"
-            clm.append({"Name":stock , "Price": price, "Alarm": alarm})
-        
-
-           
-
-            if stock in alarm:
-              if price >= alarm[stock]:
-                 note +=f"{stock} hedef fiyata ulaşdı - (${price:.2f} >={alarm[stock]:.2f})\n "
-                 print(note)
-
-                
-            
-              else:
-                 note +=f"{stock} hedef fiyata ulaşmadı "
-                 print(note)
-           
-
-       
+         
        else:
          print(f": tekar deneyiniz ")
          note +=" tekar deneyiniz \n "
    #exel bölümü
-   ecl=pd.DataFrame[clm,  ]
-   ecl.to_excel("abd_hisse.xlsx", index=True ) 
+   ecl=pd.DataFrame(clm)
+   ecl.to_excel("abd_hisse.xlsx", index=False)    
+   
+      
+      
    
    telegrambot(note)
    if __name__ == "__main__":
@@ -118,16 +133,20 @@ while True:
        #Telegram bot'unu başlatır ve gelen telegram mesajlarını alıcak updater i tanımlar
        updater=Updater(bot_token, use_context=True)
        ater=Updater(bot_token, use_context=True)
-       dp=updater.dispatcher 
-        #bilgilendirme
-       aa=updater.dispatcher
-       # hisse fiyatı komitti
-       dp.add_handler(CommandHandler("fiyatt", fiyatt))
-       #bilgilendirme
-       aa.add_handler(CommandHandler ("helpp", helpp ))
+       
 
-       #alarm fiyat belirleme
-       dp.add_handler(CommandHandler("alarmm", alarmm ))
+       # hisse fiyatı komitti
+       dp=updater.dispatcher
+       dp.add_handler(CommandHandler("fiyatt", fiyatt))
+      
+       #bilgilendirme komitti
+       aa=updater.dispatcher
+       aa.add_handler(CommandHandler ("helpp", helpp ))
+       
+       #analiz komitti
+       bb=updater.dispatcher
+       bb.add_handler(CommandHandler("analiz", analiz))
+     
 
        updater.start_polling()
        ater.idle()
