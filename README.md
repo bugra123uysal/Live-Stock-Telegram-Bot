@@ -11,10 +11,17 @@ url=f"https://api.telegram.org/bot{bot_token}/sendMessage"
 #  my telegram Commands
 - /fiyatt GOOGL
 - /helpp
-- /alarmm META 800
+- /analiz META 
 
 # stocks
 AAPL, MSFT, GOOGL ,TSLA ,TSM, AMZN, PM, META, NFLX, BABA, BAC, JNJ, WMT, BTI]
 
+# Analiz
+📊 AAPL Hisse Analizi:
+💰 Anlık Fiyat: $212.32
+🔺 En Yüksek: $215.00
+🔻 En Düşük: $208.45
+📉 Önceki Kapanış: $210.00
+📈 Günlük Değişim: %1.11
 
 # excel file
