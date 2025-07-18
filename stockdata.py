@@ -8,10 +8,21 @@ import datetime
 
 #finn hub 
 api_key="cp7rd3pr01qi8q89arpgcp7rd3pr01qi8q89arq0"
-stocks=["AAPL", "MSFT", "GOOGL","TSLA","TSM","AMZN","PM","META","NFLX","BABA","BAC","JNJ","WMT","BTI"]
+stocks= [
+    "MMM", "AOS", "ABT", "ABBV", "ACN", "ADBE", "AMD", "AES", "AFL", "A","APD", "ABNB", "AKAM", "ALB", "ARE", "ALGN", "ALLE", "LNT", "ALL","GOOGL", "GOOG", "MO", "AMZN", "AMCR", "AEE", "AEP", "AXP", "AIG","AMT", "AWK", "AMP", "AME", "AMGN", "APH", "ADI", "AON", "APA", "APO",
+    "AAPL", "AMAT", "APTV", "ACGL", "ADM", "ANET", "AJG", "AIZ", "T", "ATO","ADSK", "ADP", "AZO", "AVB", "AVY", "AXON", "BKR", "BALL", "BAC", "BAX","BDX", "BRK.B", "BBY", "TECH", "BIIB", "BLK", "BX", "BK", "BA", "BKNG","BSX", "BMY", "AVGO", "BR", "BRO", "BF.B", "BLDR", "BG", "BXP", "CHRW",
+    "CDNS", "CZR", "CPT", "CPB", "COF", "CAH", "KMX", "CCL", "CARR", "CAT","CBOE", "CBRE", "CDW", "COR", "CNC", "CNP", "CF", "CRL", "SCHW", "CHTR","CVX", "CMG", "CB", "CHD", "CI", "CINF", "CTAS", "CSCO", "C", "CFG","CLX", "CME", "CMS", "KO", "CTSH", "COIN", "CL", "CMCSA", "CAG", "COP",
+    "ED", "STZ", "CEG", "COO", "CPRT", "GLW", "CPAY", "CTVA", "CSGP", "COST", "CTRA", "CRWD", "CCI", "CSX", "CMI", "CVS", "DHR", "DRI", "DDOG", "DVA", "DAY", "DECK", "DE", "DELL", "DAL", "DVN", "DXCM", "FANG", "DLR", "DG", "DLTR", "D", "DPZ", "DASH", "DOV", "DOW", "DHI", "DTE", "DUK", "DD","EMN", "ETN", "EBAY", "ECL", "EIX", "EW", "EA", "ELV", "EMR", "ENPH",
+    "ETR", "EOG", "EPAM", "EQT", "EFX", "EQIX", "EQR", "ERIE", "ESS", "EL","EG", "EVRG", "ES", "EXC", "EXE", "EXPE", "EXPD", "EXR", "XOM", "FFIV","FDS", "FICO", "FAST", "FRT", "FDX", "FIS", "FITB", "FSLR", "FE", "FI","F", "FTNT", "FTV", "FOXA", "FOX", "BEN", "FCX", "GRMN", "IT", "GE",
+    "GEHC", "GEV", "GEN", "GNRC", "GD", "GIS", "GM", "GPC", "GILD", "GPN","GL", "GDDY", "GS", "HAL", "HIG", "HAS", "HCA", "DOC", "HSIC", "HSY","HES", "HPE", "HLT", "HOLX", "HD", "HON", "HRL", "HST", "HWM", "HPQ","HUBB", "HUM", "HBAN", "HII", "IBM", "IEX", "IDXX", "ITW", "INCY", "IR", "PODD", "INTC", "ICE", "IFF", "IP", "IPG", "INTU", "ISRG", "IVZ", "INVH",
+    "IQV", "IRM", "JBHT", "JBL", "JKHY", "J", "JNJ", "JCI", "JPM", "K", "KVUE", "KDP", "KEY", "KEYS", "KMB", "KIM", "KMI", "KKR", "KLAC", "KHC", "KR", "LHX", "LH", "LRCX", "LW", "LVS", "LDOS", "LEN", "LII", "LLY",  "LIN", "LYV", "LKQ", "LMT", "L", "LOW", "LULU", "LYB", "MTB", "MPC", "MKTX", "MAR", "MMC", "MLM", "MAS", "MA", "MTCH", "MKC", "MCD", "MCK",
+    "MDT", "MRK", "META", "MET", "MTD", "MGM", "MCHP", "MU", "MSFT", "MAA", "MRNA", "MHK", "MOH", "TAP", "MDLZ", "MPWR", "MNST", "MCO", "MS", "MOS",
+    "MSI", "MSCI", "NDAQ", "NTAP", "NFLX", "NEM", "NWSA", "NWS", "NEE","NKE", "NI", "NDSN", "NSC", "NTRS", "NOC", "NCLH", "NRG", "NUE", "NVDA", "NVR", "NXPI", "ORLY", "OXY", "ODFL", "OMC", "ON", "OKE", "ORCL", "OTIS","PCAR", "PKG", "PLTR", "PANW", "PARA", "PH", "PAYX", "PAYC", "PYPL","PNR", "PEP", "PFE", "PCG", "PM", "PSX", "PNW", "PNC", "POOL", "PPG","PPL", "PFG", "PG", "PGR", "PLD", "PRU", "PEG", "PTC", "PSA", "PHM","PWR", "QCOM", "DGX", "RL", "RJF", "RTX", "O", "REG", "REGN", "RF","RSG", "RMD", "RVTY", "ROK", "ROL", "ROP", "ROST", "RCL", "SPGI", "CRM", "SBAC", "SLB", "STX", "SRE", "NOW", "SHW", "SPG", "SWKS", "SJM","SW", "SNA", "SOLV", "SO", "LUV", "SWK", "SBUX", "STT", "STLD", "STE","SYK", "SMCI", "SYF", "SNPS", "SYY", "TMUS", "TROW", "TTWO", "TPR","TRGP", "TGT", "TEL", "TDY", "TER", "TSLA", "TXN", "TPL", "TXT", "TMO","TJX", "TKO", "TTD", "TSCO", "TT", "TDG", "TRV", "TRMB", "TFC", "TYL","TSN", "USB", "UBER", "UDR", "ULTA", "UNP", "UAL", "UPS", "URI", "UNH","UHS", "VLO", "VTR", "VLTO", "VRSN", "VRSK", "VZ", "VRTX", "VTRS","VICI", "V", "VST", "VMC", "WRB", "GWW", "WAB", "WBA", "WMT", "DIS","WBD", "WM", "WAT", "WEC", "WFC", "WELL", "WST", "WDC", "WY", "WSM","WMB", "WTW", "WDAY", "WYNN", "XEL", "XYL", "YUM", "ZBRA", "ZBH", "ZTS"
+]
+
 #telegram
-bot_token="8151142897:AAGoXgaHGKXZ4gKp2emt2KJ_Kx6dTBs5SJs"
-chat_id="6700567738"
+bot_token="**"
+chat_id="**"
 clm=[]
 
 #sent message telegram 
@@ -23,10 +34,8 @@ def send_mes(message):
 
  #analiz bölümü /analiz META
 def analiz(update , context): 
-
    
    try:
-       
        
        if len(context.args) == 0:
           
@@ -45,13 +54,10 @@ def analiz(update , context):
        profileb=requests.get(profile_urlb).json()
        
        
-
-
-
        if 'c' not in response or not responseb:
           update.message.reply_text("tekrar deneyin")
           return
-          
+          #hisse 1
        current=response['c']
        higt=response['h']
        low=response['l']
@@ -61,7 +67,7 @@ def analiz(update , context):
        industry=profile.get('finnhubIndustry', 'Bilinmiyor')
        name=profile.get('name', hisse)
 
-         
+       # hisse 2  
        currentb=responseb['c']
        higtb=responseb['h']
        lowb=responseb['l']
@@ -115,63 +121,23 @@ def help(update , context):
       update.message.reply_text(f"tekrar deneyinz komutu yanlış yazmış olabilirsiniz {e} ")
    
    
-
 #başlangıç hisse fiyatları
 message="hisse fiyatları\n"
-
-#grafik  /grafik AAPL
-def grafik(update, context):
-
-   try:
-      sse=context.args[0].upper()
-      end_time=int(time.time())
-      start_time=end_time - (60 * 60 * 24 * 30)  #son 30 gün
-
-      grfurl=f"https://finnhub.io/api/v1/stock/candle?symbol={sse}&resolution=60&from={start_time}&to={end_time}&token={api_key}"
-      ddta=requests.get(grfurl).json() 
-
-      if ddta.get("s") != "ok":  #başarılı bir yanıt gelmesse
-        update.message.reply_text("veri alınmadı")
-        return
-      
-      
-      pricess=ddta["c"]
-      tarihh=[datetime.datetime.fromtimestamp(t) for t in ddta["t"]]
-
-      plt.figure(figsize=(8, 3))
-      plt.plot(tarihh , pricess, color="blue")
-      plt.title("sa")
-      plt.grid(True)
-      plt.tight_layout()
-      plt.savefig("grafik.png")
-      plt.close()
-          #grafiği kaydedip telegrama gönderir
-      with open("grafik.png", "rb" ) as g:
-         update.message.reply_photo(photo=g, caption=f"{sse} fiyat grafiği")
-
-        
-   except Exception as e:
-     update.message.reply_text(f"bir hata oluştu tekrar deneyin {e} ")
-
-
+message_branch=""
+limit=50
+count=0
 for stock in stocks:
  
-
  try:
-   
    
    url=f"https://finnhub.io/api/v1/quote?symbol={stock}&token={api_key}"
    response=requests.get(url).json()
    
    fiya=response["c"] #stocks prices
-   print(f"{stock}:${response['c']}")
-   message +=f"{stock}: ${fiya:.2f} \n"
-
-
-   url=f"https://finnhub.io/api/v1/quote?symbol={stock}&token={api_key}"
-
-
-   response=requests.get(url).json()
+   
+   # print(f"{stock}:${response['c']}")
+   message_branch += f"{stock}: ${float(fiya):.2f} \n"
+   count +=1
 
    current=response['c']
    higt=response['h']
@@ -179,14 +145,18 @@ for stock in stocks:
    prev=response['pc']
    change=round((( current - prev)/ prev ) * 100, 2)
 
-   clm.append({"Name":stock , "Price":current, "En yüksek": higt ,"En-düşük": low , "Dünkü-fiyat": prev, "Değişim%": change })   
+   clm.append({"Name":stock , "Price":current, "En yüksek": higt ,"En-düşük": low , "Dünkü-fiyat": prev, "Değişim%": change })
+
+   if count % count == 0 :
+      send_mes(message_branch)
+      message_branch = ""
       
-   
 
  except Exception as e:
-     message +=f"{stock}: veri bulunamadı tekrar deneyiniz : ({e})\n"
+     message_branch +=f"{stock}: veri bulunamadı tekrar deneyiniz : ({e})\n"
      
- 
+ if message_branch:
+    send_mes(message_branch)
  #excel 
 ecl=pd.DataFrame(clm)
 ecl.to_excel("abd_hisse.xlsx", index=True)
@@ -204,8 +174,5 @@ dp.add_handler(CommandHandler("analiz", analiz)) #analiz komutunu çalıştıma
 dp.add_handler(CommandHandler("fiyat",fiyat))
 """ help """
 dp.add_handler(CommandHandler("help", help))
-#grafik
-dp.add_handler(CommandHandler("grafik", grafik))
 update.start_polling()
 update.idle()
-
