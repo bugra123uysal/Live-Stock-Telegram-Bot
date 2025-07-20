@@ -21,8 +21,8 @@ stocks= [
 ]
 
 #telegram
-bot_token="**"
-chat_id="**"
+bot_token="8151142897:AAGoXgaHGKXZ4gKp2emt2KJ_Kx6dTBs5SJs"
+chat_id="6700567738"
 clm=[]
 
 #sent message telegram 
@@ -47,12 +47,13 @@ def analiz(update , context):
        profile_url=f"https://finnhub.io/api/v1/stock/profile2?symbol={hisse}&token={api_key}"
        response=requests.get(url).json()
        profile=requests.get(profile_url).json()
+       
 
        urlb=f"https://finnhub.io/api/v1/quote?symbol={hisseb}&token={api_key}"
        profile_urlb=f"https://finnhub.io/api/v1/stock/profile2?symbol={hisseb}&token={api_key}"
        responseb=requests.get(urlb).json()
        profileb=requests.get(profile_urlb).json()
-       
+       industryb=profileb.get('finnhubIndustry', 'Bilinmiyor')
        
        if 'c' not in response or not responseb:
           update.message.reply_text("tekrar deneyin")
@@ -76,8 +77,6 @@ def analiz(update , context):
        market_capb=profileb.get('marketCapitalization', 'Bilinmiyor')
        industryb=profileb.get('finnhubIndustry', 'Bilinmiyor')
        nameb=profileb.get('nameb', hisseb)
-
-
        
     
        mess=(
@@ -139,13 +138,18 @@ for stock in stocks:
    message_branch += f"{stock}: ${float(fiya):.2f} \n"
    count +=1
 
+   profile_u=f"https://finnhub.io/api/v1/stock/profile2?symbol={stock}&token={api_key}"
+   profile=requests.get(profile_u).json()
+   industry=profile.get("finnhubIndustry", "Bilinmiyor")
+
    current=response['c']
    higt=response['h']
    low=response['l']
    prev=response['pc']
    change=round((( current - prev)/ prev ) * 100, 2)
 
-   clm.append({"Name":stock , "Price":current, "En yüksek": higt ,"En-düşük": low , "Dünkü-fiyat": prev, "Değişim%": change })
+
+   clm.append({"Name":stock , "Price":current, "En yüksek": higt ,"En-düşük": low , "Dünkü-fiyat": prev, "Değişim%": change ,"Industry": profile.get("finnhubIndustry", "") })
 
    if count % count == 0 :
       send_mes(message_branch)
