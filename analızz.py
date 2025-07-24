@@ -5,8 +5,10 @@ import seaborn as sns
 stock=pd.read_excel("C:\\Users\\buğra\\abd_hisse.xlsx")
 verıı=[]
 """ new colum """
+# 20 günlük volitilite
+stock['Volatilite_20']=stock['Price'].rolling(window=20).std()
+stock['Volatilite_day']=stock['En yüksek'] - stock['En-düşük']
 
-stock['Volatilite']=stock['En yüksek'] - stock['En-düşük']
 
 stock=stock.loc[:, ~stock.columns.str.contains('^Unnamed')]
 """ hata bulma """
@@ -81,4 +83,26 @@ print("yüzde-en_yüksek:\n" , en_yuks[['Name' , 'Değişim%']])
 
 print("yüzde-en_düşük:\n", en_dusuk[['Name', 'Değişim%']] )
 
+
+""" yüksek volitilite yüksek değişim anlamına mı geliyor  """
+cor_vol_yuzde=stock[['Volatilite', 'Değişim%']].corr()
+print(f"deneme: ",cor_vol_yuzde)
+
+# sektörlerdeki hisselerin ortalama  fiyatları hangisi daha palı 
+ındustury_maxx=stock.groupby('Industry')['Price'].mean().sort_values(ascending=False)
+print(f'Ortalama endüstürü ye göre hisse fiyatları' , ındustury_maxx)
+
+sns.barplot(ındustury_maxx)
+plt.title("Aaaaaverage price comparison by sector")
+plt.xticks(rotation=90)
+plt.show()
+
+
+ındustry_yuzde=stock.groupby('Industry')['Değişim%'].agg('mean','std').sort_values(ascending=False)
+sns.barplot(ındustry_yuzde)
+plt.title("Average percentage comparison by sector")
+plt.xticks(rotation=90)
+plt.show()
+
 stock.to_excel("C:\\Users\\buğra\\abd_hisse.xlsx" , index=False)
+
