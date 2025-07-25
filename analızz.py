@@ -30,7 +30,6 @@ plt.title( "hisse grafiği" )
 plt.xticks(rotation=90)
 plt.show()
 
-
 """ max-min price """
 map=stock['Price'].max()
 mip=stock['Price'].min()
@@ -69,6 +68,10 @@ plt.xticks(rotation=90)
 plt.title("Industry")
 plt.show()
 
+sns.boxplot(x='Industry',y='Price', data=stock)
+plt.title("Industry boxplot")
+plt.xticks(rotation=90)
+plt.show()
 yuma=stock['Değişim%'].max()
 en_yuks=stock[stock['Değişim%']== yuma]
 
@@ -76,8 +79,6 @@ en_yuks=stock[stock['Değişim%']== yuma]
 
 yumid=stock['Değişim%'].min()
 en_dusuk=stock[stock['Değişim%']== yumid]
-
-
 
 print("yüzde-en_yüksek:\n" , en_yuks[['Name' , 'Değişim%']])
 
@@ -104,5 +105,15 @@ plt.title("Average percentage comparison by sector")
 plt.xticks(rotation=90)
 plt.show()
 
+""" z puan analizi """
+industury_avg=stock.groupby('Industry')['Price'].transform('mean')
+industury_std=stock.groupby('Industry')['Price'].transform('std')
+stock['z_score']=(stock['Price']- industury_avg)/ industury_std
+zsocor_max=stock.sort_values('z_score', ascending=False)
+
+sns.barplot(x='Industry' , y='z_score', data=zsocor_max.head(20))
+plt.title("z-score")
+plt.xticks(rotation=90)
+plt.show()
 stock.to_excel("C:\\Users\\buğra\\abd_hisse.xlsx" , index=False)
 
