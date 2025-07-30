@@ -3,7 +3,8 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 import traceback
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import  ContextTypes , CommandHandler , ApplicationBuilder
+from telegram import Update
 import datetime
 
 """ 
@@ -18,15 +19,15 @@ import datetime
 
  """
 #finn hub 
-api_key="cp7rd3pr01qi8q89arpgcp7rd3pr01qi8q89arq0"
+api_key="****"
 stocks= [
     "MMM", "AOS", "ABT", "ABBV", "ACN", "ADBE", "AMD", "AES", "AFL", "A","APD", "ABNB", "AKAM", "ALB", "ARE", "ALGN", "ALLE", "LNT", "ALL","GOOGL", "GOOG", "MO", "AMZN", "AMCR", "AEE", "AEP", "AXP", "AIG","AMT", "AWK", "AMP", "AME", "AMGN", "APH", "ADI", "AON", "APA", "APO",
     
 ]
 
 #telegram
-bot_token="8151142897:AAGoXgaHGKXZ4gKp2emt2KJ_Kx6dTBs5SJs"
-chat_id="6700567738"
+bot_token="***"
+chat_id="***"
 clm=[]
 
 #sent message telegram 
@@ -37,9 +38,12 @@ def send_mes(message):
   
 
  #analiz bölümü /analiz META
-def analiz(update , context): 
-   
+async def analiz(update: Update ,context:ContextTypes.DEFAULT_TYPE): 
+
+  
    try:
+       
+       await update.message.reply_text("analiz oluşturuluyor...")
        
        if len(context.args) == 0:
           
@@ -60,7 +64,7 @@ def analiz(update , context):
        industryb=profileb.get('finnhubIndustry', 'Bilinmiyor')
        
        if 'c' not in response or not responseb:
-          update.message.reply_text("tekrar deneyin")
+          await  update.message.reply_text("tekrar deneyin")
           return
           #hisse 1
        current=response['c']
@@ -92,35 +96,37 @@ def analiz(update , context):
        f"piyasa değeri: {market_cap} {market_capb} \n"
        f"sektör: {industry} {industryb}"
        )
-       update.message.reply_text(mess)
+       await update.message.reply_text(mess)
 
 
    except Exception as e:
        update.message.reply_text(f"veri bulunamadı tekrar deneyiniz {e}") 
 
 #fiyat komutu  /fiyat META 
-def fiyat(update, context):
+async def fiyat(update, context):
    
    try: 
+      await update.message.reply_text("fiyat oluşturuluyor...")
       aa=context.args[0].upper()
       uurl=f"https://finnhub.io/api/v1/quote?symbol={aa}&token={api_key}"
       respon=requests.get(uurl).json()
       price=respon["c"]
       ppirice=f"{aa}: ${price:.2f}"
-      update.message.reply_text(ppirice)
-      
+     
+      await  update.message.reply_text(ppirice)
    except Exception as e:
-     update.message.reply_text(f"tekrar deneyiniz:{e}")
+       await update.message.reply_text(f"tekrar deneyiniz:{e}")
 
 # help komutu 
-def help(update , context):
+async def help(update , context):
+   
    try:
-      
+      await update.message.reply_text("yardım geliyor...")
       ınfırmacion=("-analiz komutu için  /analiz META  \n - fiyat komutu için /fiyat AAPL  \n yardım komutu için /help   ")
-      update.message.reply_text(ınfırmacion)
+      await update.message.reply_text(ınfırmacion)
       
    except Exception as e:
-      update.message.reply_text(f"tekrar deneyinz komutu yanlış yazmış olabilirsiniz {e} ")
+      await update.message.reply_text(f"tekrar deneyinz komutu yanlış yazmış olabilirsiniz {e} ")
    
    
 #başlangıç hisse fiyatları
@@ -138,7 +144,7 @@ for stock in stocks:
    fiya=response["c"] #stocks prices
    
    # print(f"{stock}:${response['c']}")
-   message_branch += f"{stock}: ${float(fiya):.2f} \n"
+   message_branch +=f"{stock}: ${float(fiya):.2f}\n"
    count +=1
 
    profile_u=f"https://finnhub.io/api/v1/stock/profile2?symbol={stock}&token={api_key}"
@@ -157,28 +163,27 @@ for stock in stocks:
       send_mes(message_branch)
       message_branch = ""
       
-
  except Exception as e:
      message_branch +=f"{stock}: veri bulunamadı tekrar deneyiniz : ({e})\n"
      
  if message_branch:
     send_mes(message_branch)
- #excel 
+ #excel bölümü 
 ecl=pd.DataFrame(clm)
 ecl.to_excel("C:\\Users\\buğra\\abd_hisse.xlsx", index=True)
 #telegrama başlangıç mesajı gönder
-send_mes(message)
+send_mes(message_branch)
 
 
 #telegram botunun çalıştırıldığı yer
-update=Updater(bot_token , use_context=True)
-dp=update.dispatcher
+if __name__ == "__main__":
+   dp=ApplicationBuilder().token(bot_token).build()
+   
+   #analiz
+   dp.add_handler(CommandHandler("analiz", analiz)) #analiz komutunu çalıştıma
+   #fiyat price 
+   dp.add_handler(CommandHandler("fiyat",fiyat))
+   """ help """
+   dp.add_handler(CommandHandler("help", help))
 
-#analiz
-dp.add_handler(CommandHandler("analiz", analiz)) #analiz komutunu çalıştıma
-#fiyat price 
-dp.add_handler(CommandHandler("fiyat",fiyat))
-""" help """
-dp.add_handler(CommandHandler("help", help))
-update.start_polling()
-update.idle()
+   dp.run_polling()
